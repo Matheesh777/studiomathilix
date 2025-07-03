@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mathilix Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Rajdhani', sans-serif;
+      background-color: #0d0d0d;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background-color: #1a1a1a;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ffff;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h2 {
+      color: #00ffff;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #222;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00ffff;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .switch-auth {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .switch-auth a {
+      color: #00ffff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2 id="form-title">Login</h2>
+
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="login()">Login</button>
+
+    <div class="switch-auth">
+      Don't have an account? <a href="#" onclick="toggleForm()">Sign Up</a>
+    </div>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <footer>&copy; 2025 Mathilix Studios</footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDc5GjwxxxgPmDCr49NwdvxCrNVvHbJ22A",
+      authDomain: "mathilixstuios.firebaseapp.com",
+      projectId: "mathilixstuios",
+      storageBucket: "mathilixstuios.firebasestorage.app",
+      messagingSenderId: "1062479988381",
+      appId: "1:1062479988381:web:dc386cc4720cac3fea7674",
+      measurementId: "G-8NX80NPLR7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let isLogin = true;
+
+    window.toggleForm = () => {
+      isLogin = !isLogin;
+      document.getElementById("form-title").textContent = isLogin ? "Login" : "Sign Up";
+      document.querySelector("button").setAttribute("onclick", isLogin ? "login()" : "signup()");
+      document.querySelector(".switch-auth a").textContent = isLogin ? "Sign Up" : "Login";
+      document.querySelector(".switch-auth").innerHTML = isLogin
+        ? `Don't have an account? <a href="#" onclick="toggleForm()">Sign Up</a>`
+        : `Already have an account? <a href="#" onclick="toggleForm()">Login</a>`;
+    };
+
+    window.login = async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const msg = document.getElementById("message");
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        msg.style.color = "lime";
+        msg.textContent = "✅ Login successful!";
+      } catch (error) {
+        msg.style.color = "red";
+        msg.textContent = `❌ ${error.message}`;
+      }
+    };
+
+    window.signup = async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const msg = document.getElementById("message");
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        msg.style.color = "lime";
+        msg.textContent = "✅ Account created successfully!";
+      } catch (error) {
+        msg.style.color = "red";
+        msg.textContent = `❌ ${error.message}`;
+      }
+    };
+  </script>
+</body>
+</html>
